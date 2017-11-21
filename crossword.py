@@ -113,9 +113,9 @@ def search_matrix(matrix, words, word_count, directions):
     :param directions: a list of the directions as given by the user
     :return:
     """
-    lines = len(
+    columns = len(
         matrix[FIRST_IDX])  # FIRST_IDX=0 can be replaced with any number
-    columns = len(matrix)
+    lines = len(matrix)
     for i in directions:
         if i == 'r':
             search_hori(matrix, words, word_count)

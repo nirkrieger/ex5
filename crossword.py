@@ -87,6 +87,44 @@ def search_words(direction_list, words, word_count):
                         else:
                             word_count[word] = 1
 
+def search_hori(matrix, words, word_count, is_reversed=False):
+    """
+    searches for the word for horizontal direction. If direction is r, searches
+    the reversed line .
+    :param matrix: the given matrix of letters.
+    :param words: a dictionary with all the words that begin with a letter
+    :param word_count: a dictionary that counts how many times a word appears
+    :param is_reversed: bool arg. if the direction is l, will be true
+    :return:
+    """
+    for line in matrix:
+        if is_reversed:
+            search_words(line[::-1], words, word_count)
+        else:
+            search_words(line, words, word_count)
+
+
+def search_matrix(matrix, words, word_count, directions):
+    """
+    for each direction, searches the matrix for the words given.
+    :param matrix: the given matrix of letters
+    :param words: a dictionary with all the words that begin with a letter
+    :param word_count: a dictionary that counts how many times a word appears
+    :param directions: a list of the directions as given by the user
+    :return:
+    """
+    lines = len(
+        matrix[FIRST_IDX])  # FIRST_IDX=0 can be replaced with any number
+    columns = len(matrix)
+    for i in directions:
+        if i == 'r':
+            search_hori(matrix, words, word_count)
+        elif i == 'l':
+            search_hori(matrix, words, word_count, True)
+        elif i == 'z':
+            pass
+
+
 def main():
     # Input validation:
     if len(sys.argv) != SYS_ARGV_LEN:

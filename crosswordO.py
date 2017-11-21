@@ -5,10 +5,12 @@
 #
 ########################################
 
-import sys, os
-#TODO main, input validation, load matrix
+import os
+import sys
 
-CORRECT_USAGE = '\nCorrect Usage: python3 crossword.py word_file matrix_file ' \
+# TODO main, input validation, load matrix
+
+CORRECT_USAGE = '\nCorrect Usage: python3 crossword.py word_file matrix_file' \
                 'output_file [udrlwxyz]'
 ARGV_LEN_ERROR = 'ERROR: insufficient parameters!'
 WORD_FILE_PATH_ERROR = 'ERROR: word_file does not exist!'
@@ -19,13 +21,15 @@ SYS_ARGV_LEN = 5
 WORD_FILE_IDX = 1
 FIRST_IDX = 0
 DELIMITER = ','
-KNOWN_DIRECTIONS = ['u','d','r', 'l', 'w', 'x', 'y', 'z']
+KNOWN_DIRECTIONS = ['u', 'd', 'r', 'l', 'w', 'x', 'y', 'z']
+
 
 def extract_directions(directions):
     direction_set = set(list(directions.lower()))
     if not direction_set.issubset(KNOWN_DIRECTIONS):
         return False, None
     return True, list(direction_set)
+
 
 def load_matrix(matrix_file, delimiter=DELIMITER):
     """
@@ -44,6 +48,7 @@ def load_matrix(matrix_file, delimiter=DELIMITER):
     matrix_file_handle.close()  # close file handle.
     # Return the new matrix.
     return matrix
+
 
 def load_words_file(words_file):
     """
@@ -69,12 +74,13 @@ def load_words_file(words_file):
             words_dict[first_letter].append(word)
     return words_dict
 
+
 def search_words(direction_list, words, word_count):
     """
     finds all the words that are in letters.
     :param direction_list: a list of the letters in a direction
     :param words: a dictionary with all the words that begin with a letter
-    :param word_count: a dictionary that counts how many times a word apprears
+    :param word_count: a dictionary that counts how many times a word appears
     :return:
     """
     for i, letter in enumerate(direction_list):
@@ -86,6 +92,53 @@ def search_words(direction_list, words, word_count):
                             word_count[word] += 1
                         else:
                             word_count[word] = 1
+
+
+def search_hori(matrix, words, word_count, is_reversed=False):
+    """
+    searches for the word for horizontal direction. If direction is r, searches
+    the reversed line .
+    :param matrix: the given matrix of letters.
+    :param words: a dictionary with all the words that begin with a letter
+    :param word_count: a dictionary that counts how many times a word appears
+    :param is_reversed: bool arg. if the direction is l, will be true
+    :return:
+    """
+    for line in matrix:
+        if is_reversed:
+            search_words(line[::-1], words, word_count)
+        else:
+            search_words(line, words, word_count)
+
+def search_diag_l(matrix, words, word_count, is_reversed=False):
+    """
+    searches for the word for diagonal direction. If direction is x, searches
+    the reversed line .
+    :param matrix: the given matrix of letters.
+    :param words: a dictionary with all the words that begin with a letter
+    :param word_count: a dictionary that counts how many times a word appears
+    :param is_reversed: bool arg. if the direction is l, will be true
+    :return:
+    """
+    
+
+
+
+def search_matrix(matrix, words, word_count, directions):
+    """
+    for each direction, searches the matrix for the words given.
+    :param matrix: the given matrix of letters
+    :param words: a dictionary with all the words that begin with a letter
+    :param word_count: a dictionary that counts how many times a word appears
+    :param directions: a list of the directions as given by the user
+    :return:
+    """
+    for i in directions:
+        if i ==  'r' :
+            search_hori(matrix, words, word_count)
+        elif i == 'l':
+            search_hori(matrix,words, word_count, True)
+
 
 def main():
     # Input validation:
@@ -104,12 +157,12 @@ def main():
     if not is_valid_directions:
         print(INVALID_DIRECTIONS_ERROR, CORRECT_USAGE)
         return
-    #TODO load words
+    # TODO load words
     words_dict = load_words_file(word_file)
-    #TODO load matrix
+    # TODO load matrix
     matrix = load_matrix(matrix_file)
     word_count = {}
-    #TODO FIND WORDS IN MATRIX
+    # TODO FIND WORDS IN MATRIX
     #
 
 

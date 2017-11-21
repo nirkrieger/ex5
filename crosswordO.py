@@ -14,7 +14,6 @@ def search_words(direction_list, words, word_count):
     :param word_count: a dictionary that counts how many times a word apprears
     :return:
     """
-
     for i, letter in enumerate(direction_list):
         if letter in words:
             for word in words[letter]:

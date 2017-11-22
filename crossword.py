@@ -51,6 +51,22 @@ def search_words(search_list, words_dict, word_count):
                         word_count[word] = 1
 
 
+def search_diagonal_right(matrix, height, width, words_dict, word_count,
+                          is_reversed=False):
+    """
+
+    :param matrix:
+    :param height:
+    :param width:
+    :param words_dict:
+    :param word_count:
+    :param is_reversed:
+    :return:
+    """
+    pass
+
+
+
 def search_horizontal(matrix, height, width, words_dict, word_count,
                      is_reversed=False):
     """
@@ -90,6 +106,14 @@ def search_vertical(matrix, height, width, words_dict, word_count,
 
 
 def search_matrix(matrix, words_dict, word_count, directions):
+    """
+
+    :param matrix:
+    :param words_dict:
+    :param word_count:
+    :param directions:
+    :return:
+    """
     height = len(matrix)
     width = len(matrix[0])
     for direction in directions:
@@ -116,6 +140,11 @@ def search_matrix(matrix, words_dict, word_count, directions):
 
 
 def extract_directions(directions):
+    """
+
+    :param directions:
+    :return:
+    """
     direction_set = set(list(directions.lower()))
     if not direction_set.issubset(KNOWN_DIRECTIONS):
         return False, None

@@ -5,7 +5,8 @@
 #
 ########################################
 
-import sys, os
+import os
+import sys
 
 ARGV_LEN_ERROR = 'ERROR: invalid number of parameters. Please enter ' \
                  'word_file matrix_file output_file directions.'
@@ -52,6 +53,7 @@ def search_words(search_list, words_dict, word_count):
                     else:
                         word_count[word] = 1
 
+
 def search_single_right_diagonal(matrix, height, width, words_dict, word_count,
                                  row_index=0, column_index=0,
                                  is_reversed=False):
@@ -76,8 +78,6 @@ def search_single_right_diagonal(matrix, height, width, words_dict, word_count,
         search_words(search_list[::-1], words_dict, word_count)
     else:
         search_words(search_list, words_dict, word_count)
-
-
 
 
 def search_diagonal_right(matrix, height, width, words_dict, word_count,
@@ -122,22 +122,18 @@ def search_single_left_diagonal(matrix, height, width, words_dict, word_count,
     i = row_index
     j = column_index
     search_list = []
-    while i <= height -1 and j >= 0:
-        try:
-            search_list.append(matrix[i][j])
-            i += 1
-            j -= 1
-        except:
-            pass
+    while i <= height - 1 and j >= 0:
+        search_list.append(matrix[i][j])
+        i += 1
+        j -= 1
     if is_reversed:
         search_words(search_list[::-1], words_dict, word_count)
     else:
         search_words(search_list, words_dict, word_count)
 
 
-
 def search_diagonal_left(matrix, height, width, words_dict, word_count,
-                          is_reversed=False):
+                         is_reversed=False):
     """
 
     :param matrix:
@@ -156,10 +152,8 @@ def search_diagonal_left(matrix, height, width, words_dict, word_count,
                                     is_reversed)
     for row_index in range(1, height - 1):
         search_single_left_diagonal(matrix, height, width, words_dict,
-                                    word_count, row_index, width -1,
+                                    word_count, row_index, width - 1,
                                     is_reversed)
-
-
 
 
 def search_horizontal(matrix, height, width, words_dict, word_count,
@@ -230,10 +224,10 @@ def search_matrix(matrix, words_dict, word_count, directions):
                                   word_count)
         elif direction == KNOWN_DIRECTIONS[DIRECTION_W]:
             search_diagonal_left(matrix, height, width, words_dict,
-                                  word_count, is_reversed=True)
+                                 word_count, is_reversed=True)
         elif direction == KNOWN_DIRECTIONS[DIRECTION_Z]:
             search_diagonal_left(matrix, height, width, words_dict,
-                                  word_count)
+                                 word_count)
         else:
             pass  # WTF.
 

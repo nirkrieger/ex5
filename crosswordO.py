@@ -94,6 +94,8 @@ def search_words(direction_list, words, word_count):
                             word_count[word] = 1
 
 
+
+
 def search_hori(matrix, words, word_count, is_reversed=False):
     """
     searches for the word for horizontal direction. If direction is r, searches
@@ -110,18 +112,23 @@ def search_hori(matrix, words, word_count, is_reversed=False):
         else:
             search_words(line, words, word_count)
 
-def search_diag_l(matrix, words, word_count, is_reversed=False):
+
+def search_diag_wz(matrix, words, word_count, lines, columns,
+                   is_reversed=False):
     """
     searches for the word for diagonal direction. If direction is x, searches
     the reversed line .
     :param matrix: the given matrix of letters.
     :param words: a dictionary with all the words that begin with a letter
     :param word_count: a dictionary that counts how many times a word appears
-    :param is_reversed: bool arg. if the direction is l, will be true
+    :param lines: number of lines in matrix
+    :param columns: number of columns in matrix.
+    :param is_reversed: bool arg. if the direction is x, will be true
     :return:
     """
-    
-
+    direction_list = []
+    starting line
+    for current_line in range[0, ]:
 
 
 def search_matrix(matrix, words, word_count, directions):
@@ -133,11 +140,16 @@ def search_matrix(matrix, words, word_count, directions):
     :param directions: a list of the directions as given by the user
     :return:
     """
+    columns = len(
+        matrix[FIRST_IDX])  # FIRST_IDX=0 can be replaced with any number
+    lines = len(matrix)
     for i in directions:
-        if i ==  'r' :
+        if i == 'r':
             search_hori(matrix, words, word_count)
         elif i == 'l':
-            search_hori(matrix,words, word_count, True)
+            search_hori(matrix, words, word_count, True)
+        elif i == 'z':
+            pass
 
 
 def main():
@@ -164,6 +176,9 @@ def main():
     word_count = {}
     # TODO FIND WORDS IN MATRIX
     #
+
+    search_matrix(matrix, words_dict, word_count, direction_list)
+    print(word_count)
 
 
 if __name__ == '__main__':

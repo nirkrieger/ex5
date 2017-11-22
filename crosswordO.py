@@ -5,26 +5,245 @@
 #
 ########################################
 
-import os
-import sys
+import sys, os
 
-# TODO main, input validation, load matrix
-
-CORRECT_USAGE = '\nCorrect Usage: python3 crossword.py word_file matrix_file' \
-                'output_file [udrlwxyz]'
-ARGV_LEN_ERROR = 'ERROR: insufficient parameters!'
-WORD_FILE_PATH_ERROR = 'ERROR: word_file does not exist!'
-MATRIX_FILE_PATH_ERROR = 'ERROR: matrix_file does not exist!'
-OUTPUT_FILE_PATH_ERROR = 'ERROR: output_file does not exist!'
-INVALID_DIRECTIONS_ERROR = 'ERROR: invalid directions!'
+ARGV_LEN_ERROR = 'ERROR: invalid number of parameters. Please enter ' \
+                 'word_file matrix_file output_file directions.'
+WORD_FILE_PATH_ERROR = 'ERROR: Word file word_list.txt does not exist'
+MATRIX_FILE_PATH_ERROR = 'ERROR: Matrix file mat.txt does not exist.'
+INVALID_DIRECTIONS_ERROR = 'ERROR: invalid directions.'
+OUTPUT_LINE_FORMAT = "%s%s%s\n"
 SYS_ARGV_LEN = 5
 WORD_FILE_IDX = 1
 FIRST_IDX = 0
+FIRST_COLUMN = 0
+FIRST_ROW = 0
+EMPTY_DICT = {}
+EMPTY_LIST = []
 DELIMITER = ','
+DIRECTION_U = 0
+DIRECTION_D = 1
+DIRECTION_R = 2
+DIRECTION_L = 3
+DIRECTION_W = 4
+DIRECTION_X = 5
+DIRECTION_Y = 6
+DIRECTION_Z = 7
 KNOWN_DIRECTIONS = ['u', 'd', 'r', 'l', 'w', 'x', 'y', 'z']
 
 
+def search_words(search_list, words_dict, word_count):
+    """
+    finds all the words that are in letters.
+    :param direction_list: a list of the letters in a direction
+    :param words: a dictionary with all the words that begin with a letter
+    :param word_count: a dictionary that counts how many times a word apprears
+    :return:
+    """
+
+    for i, letter in enumerate(search_list):
+        if letter not in words_dict:
+            continue
+        for word in words_dict[letter]:
+            if len(word) <= len(search_list) - i:
+                if word == ''.join(search_list[i: i + len(word)]):
+                    if word in word_count:
+                        word_count[word] += 1
+                    else:
+                        word_count[word] = 1
+
+def search_single_right_diagonal(matrix, height, width, words_dict, word_count,
+                                 row_index=0, column_index=0,
+                                 is_reversed=False):
+    """
+
+    :param matrix:
+    :param height:
+    :param width:
+    :param words_dict:
+    :param word_count:
+    :param is_reversed:
+    :return:
+    """
+    i = row_index
+    j = column_index
+    search_list = []
+    while i <= height - 1 and j <= width - 1:
+        search_list.append(matrix[i][j])
+        i += 1
+        j += 1
+    if is_reversed:
+        search_words(search_list[::-1], words_dict, word_count)
+    else:
+        search_words(search_list, words_dict, word_count)
+
+
+
+
+def search_diagonal_right(matrix, height, width, words_dict, word_count,
+                          is_reversed=False):
+    """
+
+    :param matrix:
+    :param height:
+    :param width:
+    :param words_dict:
+    :param word_count:
+    :param is_reversed:
+    :return:
+    """
+    if height == 1 or width == 1:
+        return
+    for row_index in range(height):
+        search_single_right_diagonal(matrix, height, width, words_dict,
+                                     word_count, row_index, FIRST_COLUMN,
+                                     is_reversed)
+    for column_index in range(1, width):
+        search_single_right_diagonal(matrix, height, width, words_dict,
+                                     word_count, FIRST_ROW, column_index,
+                                     is_reversed)
+
+
+def search_single_left_diagonal(matrix, height, width, words_dict, word_count,
+                                row_index, column_index,
+                                is_reversed=False):
+    """
+
+    :param matrix:
+    :param height:
+    :param width:
+    :param words_dict:
+    :param word_count:
+    :param row_index:
+    :param column_index:
+    :param is_reversed:
+    :return:
+    """
+    i = row_index
+    j = column_index
+    search_list = []
+    while i <= height -1 and j >= 0:
+        try:
+            search_list.append(matrix[i][j])
+            i += 1
+            j -= 1
+        except:
+            pass
+    if is_reversed:
+        search_words(search_list[::-1], words_dict, word_count)
+    else:
+        search_words(search_list, words_dict, word_count)
+
+
+
+def search_diagonal_left(matrix, height, width, words_dict, word_count,
+                          is_reversed=False):
+    """
+
+    :param matrix:
+    :param height:
+    :param width:
+    :param words_dict:
+    :param word_count:
+    :param is_reversed:
+    :return:
+    """
+    if height == 1 or width == 1:
+        return
+    for column_index in range(1, width):
+        search_single_left_diagonal(matrix, height, width, words_dict,
+                                    word_count, FIRST_ROW, column_index,
+                                    is_reversed)
+    for row_index in range(1, height - 1):
+        search_single_left_diagonal(matrix, height, width, words_dict,
+                                    word_count, row_index, width -1,
+                                    is_reversed)
+
+
+
+
+def search_horizontal(matrix, height, width, words_dict, word_count,
+                      is_reversed=False):
+    """
+    searches for the word for horizontal direction. If direction is r, searches
+    the reversed line .
+    :param matrix: the given matrix of letters.
+    :param words: a dictionary with all the words that begin with a letter
+    :param word_count: a dictionary that counts how many times a word appears
+    :param is_reversed: bool arg. if the direction is l, will be true
+    :return:
+    """
+    for line in matrix:
+        if is_reversed:
+            search_words(line[::-1], words_dict, word_count)
+        else:
+            search_words(line, words_dict, word_count)
+
+
+def search_vertical(matrix, height, width, words_dict, word_count,
+                    is_reversed=False):
+    """
+
+    :param matrix:
+    :param words_dict:
+    :param word_count:
+    :param is_reversed:
+    :return:
+    """
+    for column_index in range(width):
+        search_list = []
+        for row_index in range(height):
+            search_list.append(matrix[row_index][column_index])
+        if is_reversed:
+            search_words(search_list[::-1], words_dict, word_count)
+        else:
+            search_words(search_list, words_dict, word_count)
+
+
+def search_matrix(matrix, words_dict, word_count, directions):
+    """
+
+    :param matrix:
+    :param words_dict:
+    :param word_count:
+    :param directions:
+    :return:
+    """
+    height = len(matrix)
+    width = len(matrix[FIRST_ROW])
+    for direction in directions:
+        if direction == KNOWN_DIRECTIONS[DIRECTION_U]:
+            search_vertical(matrix, height, width, words_dict, word_count,
+                            is_reversed=True)
+        elif direction == KNOWN_DIRECTIONS[DIRECTION_D]:
+            search_vertical(matrix, height, width, words_dict, word_count)
+        elif direction == KNOWN_DIRECTIONS[DIRECTION_L]:
+            search_horizontal(matrix, height, width, words_dict, word_count,
+                              is_reversed=True)
+        elif direction == KNOWN_DIRECTIONS[DIRECTION_R]:
+            search_horizontal(matrix, height, width, words_dict, word_count)
+        elif direction == KNOWN_DIRECTIONS[DIRECTION_X]:
+            search_diagonal_right(matrix, height, width, words_dict,
+                                  word_count, is_reversed=True)
+        elif direction == KNOWN_DIRECTIONS[DIRECTION_Y]:
+            search_diagonal_right(matrix, height, width, words_dict,
+                                  word_count)
+        elif direction == KNOWN_DIRECTIONS[DIRECTION_W]:
+            search_diagonal_left(matrix, height, width, words_dict,
+                                  word_count, is_reversed=True)
+        elif direction == KNOWN_DIRECTIONS[DIRECTION_Z]:
+            search_diagonal_left(matrix, height, width, words_dict,
+                                  word_count)
+        else:
+            pass  # WTF.
+
+
 def extract_directions(directions):
+    """
+
+    :param directions:
+    :return:
+    """
     direction_set = set(list(directions.lower()))
     if not direction_set.issubset(KNOWN_DIRECTIONS):
         return False, None
@@ -44,7 +263,7 @@ def load_matrix(matrix_file, delimiter=DELIMITER):
     # Iterate lines of matrix file content, get rid of \n
     for line in matrix_file_handle.read().splitlines():
         # Split line with known delimiter.
-        matrix.append(line.split(delimiter))
+        matrix.append([item.lower() for item in line.split(delimiter)])
     matrix_file_handle.close()  # close file handle.
     # Return the new matrix.
     return matrix
@@ -65,6 +284,7 @@ def load_words_file(words_file):
     words_file_handle.close()
     # iterate words in words file list.
     for word in words_file_list:
+        word = word.lower()
         first_letter = word[FIRST_IDX]
         # if the first letter is not a key already:
         if first_letter not in words_dict:
@@ -75,110 +295,48 @@ def load_words_file(words_file):
     return words_dict
 
 
-def search_words(direction_list, words, word_count):
+def write_output_file(output_path, word_count, delimiter=','):
     """
-    finds all the words that are in letters.
-    :param direction_list: a list of the letters in a direction
-    :param words: a dictionary with all the words that begin with a letter
-    :param word_count: a dictionary that counts how many times a word appears
+
+    :param output_path:
+    :param word_count:
     :return:
     """
-    for i, letter in enumerate(direction_list):
-        if letter in words:
-            for word in words[letter]:
-                if len(word) <= len(direction_list) - i:
-                    if word == ''.join(direction_list[i: i + len(word)]):
-                        if word in word_count:
-                            word_count[word] += 1
-                        else:
-                            word_count[word] = 1
-
-
-
-
-def search_hori(matrix, words, word_count, is_reversed=False):
-    """
-    searches for the word for horizontal direction. If direction is r, searches
-    the reversed line .
-    :param matrix: the given matrix of letters.
-    :param words: a dictionary with all the words that begin with a letter
-    :param word_count: a dictionary that counts how many times a word appears
-    :param is_reversed: bool arg. if the direction is l, will be true
-    :return:
-    """
-    for line in matrix:
-        if is_reversed:
-            search_words(line[::-1], words, word_count)
-        else:
-            search_words(line, words, word_count)
-
-
-def search_diag_wz(matrix, words, word_count, lines, columns,
-                   is_reversed=False):
-    """
-    searches for the word for diagonal direction. If direction is x, searches
-    the reversed line .
-    :param matrix: the given matrix of letters.
-    :param words: a dictionary with all the words that begin with a letter
-    :param word_count: a dictionary that counts how many times a word appears
-    :param lines: number of lines in matrix
-    :param columns: number of columns in matrix.
-    :param is_reversed: bool arg. if the direction is x, will be true
-    :return:
-    """
-    direction_list = []
-    starting line
-    for current_line in range[0, ]:
-
-
-def search_matrix(matrix, words, word_count, directions):
-    """
-    for each direction, searches the matrix for the words given.
-    :param matrix: the given matrix of letters
-    :param words: a dictionary with all the words that begin with a letter
-    :param word_count: a dictionary that counts how many times a word appears
-    :param directions: a list of the directions as given by the user
-    :return:
-    """
-    columns = len(
-        matrix[FIRST_IDX])  # FIRST_IDX=0 can be replaced with any number
-    lines = len(matrix)
-    for i in directions:
-        if i == 'r':
-            search_hori(matrix, words, word_count)
-        elif i == 'l':
-            search_hori(matrix, words, word_count, True)
-        elif i == 'z':
-            pass
+    word_count_keys = sorted(word_count)
+    with open(output_path, 'w') as output_file_h:
+        for key in word_count_keys:
+            output_file_h.write(OUTPUT_LINE_FORMAT % (key, delimiter,
+                                                      str(word_count[key])))
 
 
 def main():
     # Input validation:
     if len(sys.argv) != SYS_ARGV_LEN:
-        print(ARGV_LEN_ERROR, CORRECT_USAGE)
+        print(ARGV_LEN_ERROR)
         return
     word_file, matrix_file, output_file, directions = sys.argv[WORD_FILE_IDX:]
     # Validate input and output files.
     if not os.path.exists(word_file):
-        print(WORD_FILE_PATH_ERROR, CORRECT_USAGE)
+        print(WORD_FILE_PATH_ERROR)
         return
     if not os.path.exists(matrix_file):
-        print(MATRIX_FILE_PATH_ERROR, CORRECT_USAGE)
+        print(MATRIX_FILE_PATH_ERROR)
         return
     is_valid_directions, direction_list = extract_directions(directions)
     if not is_valid_directions:
-        print(INVALID_DIRECTIONS_ERROR, CORRECT_USAGE)
+        print(INVALID_DIRECTIONS_ERROR)
         return
-    # TODO load words
+    # LOAD WORDS
     words_dict = load_words_file(word_file)
-    # TODO load matrix
+    # LOAD MATRIX
     matrix = load_matrix(matrix_file)
     word_count = {}
-    # TODO FIND WORDS IN MATRIX
-    #
 
-    search_matrix(matrix, words_dict, word_count, direction_list)
-    print(word_count)
+    if words_dict != EMPTY_DICT and matrix != EMPTY_LIST:
+        # RUN SEARCH MATRIX
+        search_matrix(matrix, words_dict, word_count, directions)
+
+    write_output_file(output_file, word_count)
 
 
 if __name__ == '__main__':

@@ -328,7 +328,7 @@ def main():
 
     if words_dict != EMPTY_DICT and matrix != EMPTY_LIST:
         # RUN SEARCH MATRIX
-        search_matrix(matrix, words_dict, word_count, directions)
+        search_matrix(matrix, wordds_ict, word_count, directions)
 
     write_output_file(output_file, word_count)
 

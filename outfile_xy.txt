@@ -1,3 +1,0 @@
-ants,1
-can,1
-crop,1

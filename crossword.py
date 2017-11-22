@@ -5,7 +5,8 @@
 #
 ########################################
 
-import sys, os
+import os
+import sys
 
 ARGV_LEN_ERROR = 'ERROR: invalid number of parameters. Please enter ' \
                  'word_file matrix_file output_file directions.'
@@ -52,6 +53,7 @@ def search_words(search_list, words_dict, word_count):
                     else:
                         word_count[word] = 1
 
+
 def search_single_right_diagonal(matrix, height, width, words_dict, word_count,
                                  row_index=0, column_index=0,
                                  is_reversed=False):
@@ -77,6 +79,7 @@ def search_single_right_diagonal(matrix, height, width, words_dict, word_count,
     else:
         search_words(search_list, words_dict, word_count)
 
+
 def search_diagonal_right(matrix, height, width, words_dict, word_count,
                           is_reversed=False):
     """
@@ -99,6 +102,58 @@ def search_diagonal_right(matrix, height, width, words_dict, word_count,
         search_single_right_diagonal(matrix, height, width, words_dict,
                                      word_count, FIRST_ROW, column_index,
                                      is_reversed)
+
+
+def search_single_left_diagonal(matrix, height, width, words_dict, word_count,
+                                row_index, column_index,
+                                is_reversed=False):
+    """
+
+    :param matrix:
+    :param height:
+    :param width:
+    :param words_dict:
+    :param word_count:
+    :param row_index:
+    :param column_index:
+    :param is_reversed:
+    :return:
+    """
+    i = row_index
+    j = column_index
+    search_list = []
+    while i <= height - 1 and j >= 0:
+        search_list.append(matrix[i][j])
+        i += 1
+        j -= 1
+    if is_reversed:
+        search_words(search_list[::-1], words_dict, word_count)
+    else:
+        search_words(search_list, words_dict, word_count)
+
+
+def search_diagonal_left(matrix, height, width, words_dict, word_count,
+                         is_reversed=False):
+    """
+
+    :param matrix:
+    :param height:
+    :param width:
+    :param words_dict:
+    :param word_count:
+    :param is_reversed:
+    :return:
+    """
+    if height == 1 or width == 1:
+        return
+    for column_index in range(1, width):
+        search_single_left_diagonal(matrix, height, width, words_dict,
+                                    word_count, FIRST_ROW, column_index,
+                                    is_reversed)
+    for row_index in range(1, height - 1):
+        search_single_left_diagonal(matrix, height, width, words_dict,
+                                    word_count, row_index, width - 1,
+                                    is_reversed)
 
 
 def search_horizontal(matrix, height, width, words_dict, word_count,

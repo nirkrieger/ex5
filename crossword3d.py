@@ -7,8 +7,8 @@
 
 import os
 import sys
-import crossword
 
+import crossword
 
 KNOWN_3D_DIRECTIONS = ['a', 'b', 'c']
 SEPARATOR = '***'
@@ -31,7 +31,8 @@ def extract_3d_directions(directions):
         return False, None
     return True, list(direction_set)
 
-def load_3d_matrix(matrix_file,  delimiter=crossword.DELIMITER):
+
+def load_3d_matrix(matrix_file, delimiter=crossword.DELIMITER):
     """
     Returns a matrix as a list of lists based on the matrix_file parameter.
     :param matrix_file:
@@ -55,6 +56,7 @@ def load_3d_matrix(matrix_file,  delimiter=crossword.DELIMITER):
     # Return the new 3d matrix.
     return matrix_3d
 
+
 def search_depth(matrix_3d, words_dict, word_count):
     """
     
@@ -67,46 +69,55 @@ def search_depth(matrix_3d, words_dict, word_count):
         crossword.search_matrix(matrix, words_dict, word_count,
                                 crossword.KNOWN_DIRECTIONS)
 
+
 def search_length(matrix_3d, height, words_dict, word_count):
     """
 
     :param matrix_3d:
+    :param height:
     :param words_dict:
     :param word_count:
     :return:
     """
-    for row_index in range(height): #will run on the same row in every 2d matrix.
+    for row_index in range(
+            height):  # will run on the same row in every 2d matrix.
         len_matrix = []
-        for mat in matrix_3d: # will run  over all 2d matrix
+        for mat in matrix_3d:  # will run  over all 2d matrix
             len_matrix.append(mat[row_index])
         crossword.search_matrix(len_matrix, words_dict, word_count,
                                 crossword.KNOWN_DIRECTIONS)
 
 
-def search_width(matrix_3d, number_of_2d_matrix, height, width, words_dict, word_count):
+def search_width(matrix_3d, number_of_2d_matrix, height, width, words_dict,
+                 word_count):
     """
 
     :param matrix_3d:
+    :param number_of_2d_matrix:
+    :param height:
+    :param width:
     :param words_dict:
     :param word_count:
     :return:
     """
-    for column_index in range(width): # will run over the same column in every 2d matrix
+    for column_index in range(
+            width):  # will run over the same column in every 2d matrix
         width_matrix = []
-        for mat in range(number_of_2d_matrix): # will run  over every 2d matrix
+        for mat in range(
+                number_of_2d_matrix):  # will run  over every 2d matrix
             width_matrix.append([])
             for row_index in range(height):
-                width_matrix[mat].append(matrix_3d[mat][row_index][column_index])
+                width_matrix[mat].append(
+                    matrix_3d[mat][row_index][column_index])
 
         crossword.search_matrix(width_matrix, words_dict, word_count,
                                 crossword.KNOWN_DIRECTIONS)
 
 
-
 def search_3d_matrix(matrix_3d, words_dict, word_count, directions):
     """
 
-    :param matrix:
+    :param matrix_3d:
     :param words_dict:
     :param word_count:
     :param directions:
@@ -121,7 +132,8 @@ def search_3d_matrix(matrix_3d, words_dict, word_count, directions):
         elif i == KNOWN_3D_DIRECTIONS[DIRECTION_B]:
             search_length(matrix_3d, height, words_dict, word_count)
         elif i == KNOWN_3D_DIRECTIONS[DIRECTION_C]:
-            search_width(matrix_3d, num_of_2d_matrix, height, width, words_dict, word_count)
+            search_width(matrix_3d, num_of_2d_matrix, height, width,
+                         words_dict, word_count)
 
 
 def main():
@@ -129,7 +141,8 @@ def main():
     if len(sys.argv) != crossword.SYS_ARGV_LEN:
         print(crossword.ARGV_LEN_ERROR)
         return
-    word_file, matrix_file, output_file, directions = sys.argv[crossword.WORD_FILE_IDX:]
+    word_file, matrix_file, output_file, directions = sys.argv[
+                                                      crossword.WORD_FILE_IDX:]
     # Validate input and output files.
     if not os.path.exists(word_file):
         print(crossword.WORD_FILE_PATH_ERROR)
@@ -151,6 +164,7 @@ def main():
         search_3d_matrix(matrix_3d, words_dict, word_count, directions)
 
     crossword.write_output_file(output_file, word_count)
+
 
 if __name__ == '__main__':
     main()

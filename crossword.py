@@ -16,6 +16,8 @@ OUTPUT_LINE_FORMAT = "%s%s%s\n"
 SYS_ARGV_LEN = 5
 WORD_FILE_IDX = 1
 FIRST_IDX = 0
+FIRST_COLUMN = 0
+FIRST_ROW = 0
 EMPTY_DICT = {}
 EMPTY_LIST = []
 DELIMITER = ','
@@ -50,6 +52,30 @@ def search_words(search_list, words_dict, word_count):
                     else:
                         word_count[word] = 1
 
+def search_single_right_diagonal(matrix, height, width, words_dict, word_count,
+                                 row_index=0, column_index=0,
+                                 is_reversed=False):
+    """
+
+    :param matrix:
+    :param height:
+    :param width:
+    :param words_dict:
+    :param word_count:
+    :param is_reversed:
+    :return:
+    """
+    i = row_index
+    j = column_index
+    search_list = []
+    while i <= height - 1 and j <= width - 1:
+        search_list.append(matrix[i][j])
+        i += 1
+        j += 1
+    if is_reversed:
+        search_words(search_list[::-1], words_dict, word_count)
+    else:
+        search_words(search_list, words_dict, word_count)
 
 def search_diagonal_right(matrix, height, width, words_dict, word_count,
                           is_reversed=False):
@@ -63,12 +89,20 @@ def search_diagonal_right(matrix, height, width, words_dict, word_count,
     :param is_reversed:
     :return:
     """
-    pass
-
+    if height == 1 or width == 1:
+        return
+    for row_index in range(height):
+        search_single_right_diagonal(matrix, height, width, words_dict,
+                                     word_count, row_index, FIRST_COLUMN,
+                                     is_reversed)
+    for column_index in range(1, width):
+        search_single_right_diagonal(matrix, height, width, words_dict,
+                                     word_count, FIRST_ROW, column_index,
+                                     is_reversed)
 
 
 def search_horizontal(matrix, height, width, words_dict, word_count,
-                     is_reversed=False):
+                      is_reversed=False):
     """
     searches for the word for horizontal direction. If direction is r, searches
     the reversed line .
@@ -115,7 +149,7 @@ def search_matrix(matrix, words_dict, word_count, directions):
     :return:
     """
     height = len(matrix)
-    width = len(matrix[0])
+    width = len(matrix[FIRST_ROW])
     for direction in directions:
         if direction == KNOWN_DIRECTIONS[DIRECTION_U]:
             search_vertical(matrix, height, width, words_dict, word_count,
@@ -128,9 +162,11 @@ def search_matrix(matrix, words_dict, word_count, directions):
         elif direction == KNOWN_DIRECTIONS[DIRECTION_R]:
             search_horizontal(matrix, height, width, words_dict, word_count)
         elif direction == KNOWN_DIRECTIONS[DIRECTION_X]:
-            pass
+            search_diagonal_right(matrix, height, width, words_dict,
+                                  word_count, is_reversed=True)
         elif direction == KNOWN_DIRECTIONS[DIRECTION_Y]:
-            pass
+            search_diagonal_right(matrix, height, width, words_dict,
+                                  word_count)
         elif direction == KNOWN_DIRECTIONS[DIRECTION_W]:
             pass
         elif direction == KNOWN_DIRECTIONS[DIRECTION_Z]:

@@ -223,9 +223,11 @@ def search_matrix(matrix, words_dict, word_count, directions):
             search_diagonal_right(matrix, height, width, words_dict,
                                   word_count)
         elif direction == KNOWN_DIRECTIONS[DIRECTION_W]:
-            pass
+            search_diagonal_left(matrix, height, width, words_dict,
+                                 word_count, is_reversed=True)
         elif direction == KNOWN_DIRECTIONS[DIRECTION_Z]:
-            pass
+            search_diagonal_left(matrix, height, width, words_dict,
+                                 word_count)
         else:
             pass  # WTF.
 

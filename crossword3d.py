@@ -7,6 +7,6 @@
 
 import os
 import sys
-import crosswordO
+import crossword
 
 KNOWN_3D_DIRECTIONS = ['a', 'b', 'c']

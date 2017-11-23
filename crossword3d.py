@@ -1,6 +1,10 @@
 ########################################
-# AUTHORS: Nir Krieger & Oded Fogel
-#
+# ex5
+# FILE: crossword3d.py
+# WRITERS: Nir Krieger, nirkr & Oded Fogel, fogrid
+# DESCRIPTION: a script that searches  a 3d matrix of letters for words given
+#             by the user, in the directions given by the user. outputs the
+#             words found and the number of times they appear.
 #
 #
 ########################################
@@ -22,8 +26,9 @@ FIRST_COLUMN = 0
 
 def extract_3d_directions(directions):
     """
-
-    :param directions:
+    receives the directions the user inputs and returns a list of directions to
+    search in, also validates the directions input
+    :param directions: the directions the user inputs
     :return:
     """
     direction_set = set(list(directions.lower()))
@@ -34,8 +39,9 @@ def extract_3d_directions(directions):
 
 def load_3d_matrix(matrix_file, delimiter=crossword.DELIMITER):
     """
-    Returns a matrix as a list of lists based on the matrix_file parameter.
-    :param matrix_file:
+    Returns a 3d matrix as a list of lists of lists based on the matrix_file
+    parameter.
+    :param matrix_file: the 3d matrix the user inputs
     :param delimiter: DELIMITER (comma) by default, can be changed.
     :return: a 3d matrix - list of matrix that are list of lists of letters.
     """
@@ -59,10 +65,10 @@ def load_3d_matrix(matrix_file, delimiter=crossword.DELIMITER):
 
 def search_depth(matrix_3d, words_dict, word_count):
     """
-    
-    :param matrix_3d: 
-    :param words_dict: 
-    :param word_count: 
+    Searches the length of matrix_3d for the words in word dict using all 
+    search functions from crossword to search in all directions in a 2d matrix
+    :param words_dict: A dictionary with all the words that begin with a letter
+    :param word_count: A dictionary that counts how many times a word appears
     :return: 
     """""
     for matrix in matrix_3d:
@@ -72,11 +78,12 @@ def search_depth(matrix_3d, words_dict, word_count):
 
 def search_length(matrix_3d, height, words_dict, word_count):
     """
-
-    :param matrix_3d:
-    :param height:
-    :param words_dict:
-    :param word_count:
+    Searches the length of matrix_3d for the words in word dict using all
+    search functions from crossword to search in all directions in a 2d matrix
+    :param matrix_3d: The original 3d matrix of letters
+    :param height: the height of a 2d matrix
+    :param words_dict: A dictionary with all the words that begin with a letter
+    :param word_count: A dictionary that counts how many times a word appears
     :return:
     """
     for row_index in range(
@@ -91,13 +98,14 @@ def search_length(matrix_3d, height, words_dict, word_count):
 def search_width(matrix_3d, number_of_2d_matrix, height, width, words_dict,
                  word_count):
     """
-
-    :param matrix_3d:
-    :param number_of_2d_matrix:
-    :param height:
-    :param width:
-    :param words_dict:
-    :param word_count:
+    Searches the length of matrix_3d for the words in word dict using all
+    search functions from crossword to search in all directions in a 2d matrix
+    :param matrix_3d: The original 3d matrix of letters
+    :param number_of_2d_matrix: number of 2d matrix in 3d matrix
+    :param height: height of a 2d matrix
+    :param width: width of a 2d matrix
+    :param words_dict: A dictionary with all the words that begin with a letter
+    :param word_count: A dictionary that counts how many times a word appears
     :return:
     """
     for column_index in range(
@@ -116,11 +124,11 @@ def search_width(matrix_3d, number_of_2d_matrix, height, width, words_dict,
 
 def search_3d_matrix(matrix_3d, words_dict, word_count, directions):
     """
-
-    :param matrix_3d:
-    :param words_dict:
-    :param word_count:
-    :param directions:
+    searches the 3d matrix for the requested directions.
+    :param matrix_3d: The original 3d matrix of letters
+    :param words_dict: A dictionary with all the words that begin with a letter
+    :param word_count: A dictionary that counts how many times a word appears
+    :param directions: the directions given by the user.
     :return:
     """
     num_of_2d_matrix = len(matrix_3d)

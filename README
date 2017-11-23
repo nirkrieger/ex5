@@ -1,0 +1,23 @@
+WRITERS: Oded Fogel 204462159 fogrid, Nir Krieger  nirkr
+
+=================================
+=  README for ex5 - crosswords  =
+=================================
+
+
+==================
+=  Description:  =
+==================
+crossword.py - searches a 2d crossword for words in a file given by the user.
+outputs the found words with a number each appears into a file defined by user.
+
+crossword3d.py - searches a 3d crossword for words given
+by the user, in the directions given by the user. outputs the
+words found and the number of times they appear into a file defined by user.
+searches using function from crossword.py.
+
+
+
+======================
+=  Special Comments  =
+======================
